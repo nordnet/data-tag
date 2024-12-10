@@ -319,7 +319,19 @@ ___TEMPLATE_PARAMETERS___
             ]
           }
         ]
-      }
+      },
+      {
+        "type": "SELECT",
+        "name": "event_settings_variable",
+        "displayName": "Event Settings Variable",
+        "macrosInSelect": true,
+        "selectItems": [
+          {
+            "value": "none",
+            "displayValue": "None"
+          }
+        ]
+      },
     ]
   },
   {
@@ -1094,6 +1106,20 @@ function getUserAndCustomDataArray() {
 
   if (data.custom_data && data.custom_data.length) {
     userAndCustomDataArray = data.custom_data;
+  }
+
+  if (data.event_settings_variable) {
+    const eventSettings = data.event_settings_variable;
+    for (let paramName in eventSettings) {
+      if (eventSettings.hasOwnProperty(paramName)) {
+        userAndCustomDataArray.push({
+          name: paramName,
+          value: eventSettings[paramName],
+          transformation: 'none',
+          store: 'none'
+        });
+      }
+    }
   }
 
   if (data.user_data && data.user_data.length) {

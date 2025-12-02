@@ -27,8 +27,11 @@ if (
 
   return;
 }
+
 const userAndCustomData = getUserAndCustomDataArray();
 let requestType = determinateRequestType();
+
+const normalizedServerUrl = normalizeServerUrl();
 
 if (requestType === 'post') {
   const dataScriptVersion = 'v8';
@@ -59,11 +62,11 @@ function sendPostRequest() {
   callInWindow(
     'dataTagSendData',
     eventData,
-    data.gtm_server_domain,
-    data.request_path +
+    normalizedServerUrl.gtmServerDomain,
+    normalizedServerUrl.requestPath +
       '?v=' +
       eventData.v +
-      '&event_name=' +
+      '&event=' +
       encodeUriComponent(eventData.event_name) +
       (data.richsstsse ? '&richsstsse' : ''),
     data.dataLayerEventName,
@@ -83,8 +86,33 @@ function sendGetRequest() {
   );
 }
 
+function normalizeServerUrl() {
+  let gtmServerDomain = data.gtm_server_domain;
+  let requestPath = data.request_path;
+
+  // Add 'https://' if gtmServerDomain doesn't start with it
+  if (gtmServerDomain.indexOf('http://') !== 0 && gtmServerDomain.indexOf('https://') !== 0) {
+    gtmServerDomain = 'https://' + gtmServerDomain;
+  }
+
+  // Removes trailing slash from gtmServerDomain if it ends with it
+  if (gtmServerDomain.charAt(gtmServerDomain.length - 1) === '/') {
+    gtmServerDomain = gtmServerDomain.slice(0, -1);
+  }
+
+  // Adds slash to first position of requestPath if doesn't start with it
+  if (requestPath.charAt(0) !== '/') {
+    requestPath = '/' + requestPath;
+  }
+
+  return {
+    gtmServerDomain: gtmServerDomain,
+    requestPath: requestPath
+  };
+}
+
 function buildEndpoint() {
-  return data.gtm_server_domain + data.request_path;
+  return normalizedServerUrl.gtmServerDomain + normalizedServerUrl.requestPath;
 }
 
 function addRequiredDataForPostRequest(data, eventData) {
@@ -119,7 +147,7 @@ function addDataForGetRequest(data, url) {
   url +=
     '?v=' +
     data.protocol_version +
-    '&event_name=' +
+    '&event=' +
     encodeUriComponent(getEventName(data));
 
   if (data.add_common) {
@@ -455,6 +483,7 @@ function addCommonCookie(eventData) {
     'taboola_cid',
     // Awin cookies
     'awin_awc',
+    'awin_sn_awc',
     'awin_source',
     // Rakuten cookies
     'rakuten_site_id',
@@ -468,6 +497,13 @@ function addCommonCookie(eventData) {
     'stape_klaviyo_viewed_items',
     // Outbrain cookies
     'outbrain_cid',
+    // Webgains cookies
+    'wg_cid',
+    // Postscript cookies
+    'ps_id',
+    // Microsoft UET CAPI cookies
+    'uet_msclkid', '_uetmsclkid',
+    'uet_vid', '_uetvid'
   ];
   let commonCookie = null;
 

@@ -1,5 +1,18 @@
 homepage: "https://stape.io/"
-versions: 
+documentation: "https://github.com/stape-io/data-tag"
+versions:
+  - sha: 80e00e7b7daf5498a52c0d081190845bfd4d6911
+    changeNotes: Added Microsoft UET CAPI cookies read permission.
+  - sha: 306f447046246277f33e46b5762c3d48e97b7e4a
+    changeNotes: Added common cookie support for Microsoft UET CAPI.
+  - sha: a0f132f4d55428920e07f8b554aec57a14e93876
+    changeNotes: Added common cookie support for Postscript.
+  - sha: 15247cd18df16b8d76749c3c1ed3b90b601f0759
+    changeNotes: Changed event name parameter in request URLs.
+  - sha: 5c73996ce88cd98be54ea1b54c9e9e59a618b4e9
+    changeNotes: Use fetch instead of XHR enabled by default.
+  - sha: c859ca69a67a0e4593b780128a9756812b3d0939
+    changeNotes: Added better handling of GTM Server URL. Added support for awin_sn_awc and wg_cid common cookies.
   - sha: 9bcc3f21b2f605bc5c9fb4adac6b99785126db45
     changeNotes: Added outbrain cookies.
   - sha: 32e486606e0fb18da8b44ef328e53a40de9bd795
